@@ -1,0 +1,361 @@
+0.93
+
+Major:
+- DataTypes can now handle per-key value sets, most commonly used to handle sets of all
+currently used values for an attribute
+- EOF aspect of JBND fully supports value sets, automatically adds values to value sets
+for class properties
+- relevant API:
+-org.jbnd.DataType#valueSetKeys() method added
+-org.jbnd.DataType#addToValueSet(Object value, String key) method added
+-org.jbnd.DataType#valueSetFor(String key) method added
+-org.jbnd.AbstractDataType#valueSetKeys() method added
+-org.jbnd.AbstractDataType#addToValueSet(Object value, String key) method added
+-org.jbnd.AbstractDataType#valueSetFor(String key) method added
+
+New features:
+- org.jbnd.support.OneValDataObject class added
+- org.jbnd.data.SetDataSource class added
+
+Bug fixes:
+
+- org.jbnd.ValueConverter now also converts to Float, Double, Long, Float.TYPE,
+Double.TYPE and Long.TYPE
+- org.jbnd.eof.EOFDataObject now flushes the cache of a derived property before firing
+a change event for it
+-org.jbnd.swing.BoundTreeModel.DataObjectNode#children() now returns an empty Enumeration
+if there are no children nodes, instead of null
+-org.jbnd.data.SortingDataSource#dataChanged(DataSourceEvent) method fixed
+org.jbnd.swing.JBNDSwingUtil#selectedRecords(JTree) method  fixed
+
+API changes:
+
+
+0.92
+
+Major:
+
+- derived property management (caching) has been greatly improved. Now derivation
+meta-info is managed by DataTypes, allowing greater standardized support for derived
+properties throughout JBND. This led to a number of API additions, changes and
+depreciations. In short, DataType#addDerivedProp(...) should now be used to inform
+JBND of derived properties, instead of DataObject based methods.
+
+New features:
+
+- org.jbnd.DataType#addDerivedProp(String, PropType, Class<?>, String...) method added
+- org.jbnd.DataType#propsDerivedFrom(String) method added
+- org.jbnd.DataType#shouldCacheDerivedPropValues(String key)
+- org.jbnd.AbstractDataType class added
+- org.jbnd.eof.EOFDataObject#initDerivedProps() method added
+- org.jbnd.qual.QualifierGroup#clear() method added
+- org.jbnd.qual.KeyValueQualifier now performs value conversion using
+JBND's ValueConverter before comparing values
+- org.jbnd.undo.DataObjectUndoable#registerUndoable() is now in charge of
+instantiating and registering DataObjectUndoables
+- org.jbnd.swing.x.JXTableSelectionDataSource class added
+
+Big fixes:
+
+- org.jbnd.swing.conn.ConnectionFactory now properly connects JFormattedTextField components
+- org.jbnd.undo.AggregatedDataObjectUndoable#dispose() does not throw a
+ConcurrentModificationException anymore
+- org.jbnd.support.ValueConverter#toClass(Object, Class<T>) parameterized, now returns an
+object of type T
+- WebObjects velocity templates now include constructors to deal with inheritance situations
+- org.jbnd.support.JBNDUtil#indexOf(DataObject, DataSource) now properly deals with locating
+CachingDataObjects, or DataObjects backing CachingDataObjects, where it used to return -1
+- org.jbnd.binding.AddEditGroup#AddEditGroup(DataSource, boolean, DataType) constructor
+fixed
+- org.jbnd.support.JBNDUtil#set(Object, String, DataObject) can now deal with derived properties,
+as opposed to throwing an UnknownKeyException
+- org.jbnd.swing.BoundTableModel and org.jbnd.swing.x.BoundTreeTableModel are better able
+to determine the class of value for a particular column (their #getColumnClass(int) methods
+have been upgraded)
+- org.jbnd.support.JBNDUtil#set(Object, String, DataObject) now handles un-relating properly
+
+API changes:
+
+- int based property type flags in org.jbnd.DataType replaced by the org.jbnd.DataType.PropType
+enumeration, additional flags added to handle derived properties
+- org.jbnd.DataType#properties() now also includes the derived properties added to the
+DataType in it's return value
+- org.jbnd.eof.EOFDataType#properties() now also includes the derived properties added to the
+DataType in it's return value
+- org.jbnd.eof.EOFDataObject#addDerivedProperty(String, String...) has been depreciated 
+and implemented to do nothing, in favor of an improved derived property management system
+- org.jbnd.AbstractDataObject does not perform derived property caching anymore,
+the required implementation is impossible to implement in an abstract implementation
+- org.jbnd.qual.KeyValueQualifier and subclasses: all int flags changed to enumerations
+- org.jbnd.event.DataObjectEvent type flags depreciated in favor of the DataObjectEvent.Type
+enumeration
+- org.jbnd.event.DataSourceEvent type flags depreciated in favor of the DataSourceEvent.Type
+enumeration
+- fields, methods and classes made final where applicable
+- org.jbnd.binding.Binding#getValidationHandler() method added
+- org.jbnd.binding.AddEditGroup#setDeferredEditing(boolean) method removed
+- all keypath management related classes moved form org.jbnd.support to org.jbnd.paths
+
+0.91
+
+- Depreciations of GPBinding constructors and all concrete ComponentConnection
+subclass constructors in favor of factory methods
+
+0.9 -
+
+Major:
+- the WebObjects part of JBND now supports (and requires) WO 5.4
+
+New features:
+- org.jbnd.undo package now provides undo / redo support
+- org.jbnd.swing.x package provides support for the SwingX library components
+(JXTreeTable, JXDatePicker)
+- org.jbnd.support.WorkerThread class added
+- org.jbnd.data.MergingDataSource class added
+- org.jbnd.data.LimitingDataSource class added
+- org.jbnd.swing.comp.BoundMessageLabel class added
+- org.jbnd.swing.JBNDSwingUtil class added
+- org.jbnd.DataType#inverseRelationship(String) method added
+- org.jbnd.localization package and it's contents added, translations provided 
+for English, Spanish and Dutch
+- #addDerivedProperty(...) method added to org.jbnd.eof.EOFDataObject,
+it is the preferred method of defining property dependencies, takes
+care of automated derived value caching and cache updating, it is simply
+cool
+- org.jbnd.support.JBNDUtil#checkForEmptyString(T) method added
+- many places where array arguments are passed have been changed to accept
+variable numbers of arguments
+- org.jbnd.swing.conn.LabelConnection now supports custom value formatting
+- org.jbnd.qual.KeyValueQualifier and subclasses now accept a comparator
+- org.jbnd.qual.NormalizedDateFilter class added
+
+Bug fixes:
+
+- org.jbnd.data.SortingDataSource and org.jbnd.data.FilteringDataSource's
+internal data-set maintenance overhauled, many bugs eliminated
+- org.jbnd.binding.GPBinding's editing capabilities now work properly when doing
+deferred adding and editing in master detail setups
+- org.jbnd.swing.conn classes had their #syncEditability() method fixed to properly
+deal with empty Bindings
+- org.jbnd.binding.AddEditGroup#cancelAdd() method fixed
+- org.jbnd.eof.EOFDataType#dataTypeForRelationship(String) now supports key paths
+- org.jbnd.qual.ContainsStringQualifier#getValue() fixed when using empty strings
+- org.jbnd.eof.EOFQualifierTranslator now translates ContainsStringQualifiers
+properly
+- many usages of org.jbnd.support.JBNDUtil#supertrim(String) have been dropped in
+favor of #checkForEmptyString(T) to avoid validation errors
+- observing changes that influence derived properties across relationships fixed
+- TreeModelEvents fired by BoundTreeModel now have the model as the event source,
+and not the node firing
+- BoundComboBoxModel now obeys it's Binding keys
+- QualifierBinding now has a default ValidationHandler set
+- BoundTreeModel: first level node initialization of the tree model fixed
+
+API changes:
+
+- org.jbnd.eof.RemoteMethodInvoker class moved to the WOJCKit project
+- org.jbnd.eof.NamingSupport now uses ResourceBundles to deal with custom type and 
+property formatting and internationalization
+- org.jbnd.DataObject#validateForSave() renamed to validateToSave() in order to avoid
+conflict with the same method in EOEnterpriseObject
+- org.jbnd.DataObject.Deletable#validateForDelete() renamed to validateToDelete() in
+order to avoid conflict with the same method in EOEnterpriseObject
+- moved info about Notes concerned with DataObject changes from org.jbnd.event.DataObjectEvent to org.jbnd.DataObject
+- depreciated classes and methods have been removed
+- org.jbnd.support.Utilities renamed to org.jbnd.support.JBNDUtil
+- org.jbnd.eof.EOFUtilities renamed to org.jbnd.eof.EOFUtil
+- org.jbnd.support.Filter and org.jbnd.support.AbstractFilter classes moved to the
+org.jbnd.qual package
+- org.jbnd.support.Filter interface and all it's implementations had array
+filtering methods removed
+
+0.8 - 
+
+New features:
+- org.jbnd.eof.RemoteMethodInvoker class added
+- org.jbnd.support.ValidationExceptionSupport now formats also the
+Map<Integer, ValidationException[]> form of validation failure, which is used
+by AddGroup and EditGroup, when it is possible that multiple
+DataObjects fail validation on multiple properties
+- org.jbnd.support.ValueConverter now works with BigDecimal and
+BigInteger classes as well
+- org.jbnd.swing.data.TreeSelectionDataSource now accepts 
+TreeSelectionModel instances, allowing it to be used with other
+tree-like components, such as Quaqua's JBrowser
+- org.jbnd.eof.EOFValueConverter class added to perform some
+EOF specific type conversions
+- org.jbnd.DataObject.Deletable interface added
+- org.jbnd.swing.conn.TreeConnection class added
+- org.jbnd.swing.conn.ListConnection class added
+- org.jbnd.swing.BoundTreeModel#pathForObject(DataObject) method added
+- org.jbnd.AbstractDataObject and org.jbnd.eof.EOFDataObject have had
+the addPropertyDependence(String, String[]) method added, for more info
+see the API documentation for the method
+- org.jbnd.binding.AddEditGroup class added, to replace the AddGroup and
+EditGroup classes, as well as provide additional capabilities and simplify
+JBND usage
+- org.jbnd.binding.GPBinding (General Purpose Binding) class added, to replace
+AddBinding, EditBinding and ViewBinding classes
+- org.jbnd.ValidationException now contains the optional 'message' property,
+to provide for customized user feedback, ValidationExceptionSupport takes
+it into account when formatting an exception into user feedback
+- org.jbnd.event.DataObjectEvent#DERIVED_PROPERTY_CHANGE event type added,
+to improve support for dependent property event firing
+- org.jbnd.event.DataObjectEvent#CACHED_PROPERTY_CHANGE event type added,
+to indicate that the DataObject change was one that happened to a deferred
+cache, and not to a persistent object
+
+Bug fixes:
+- org.jbnd.data.SortingDataSource#setComparators(...) and constructors
+now accept a null reference, indicating that no sorting should be performed
+- org.jbnd.swing.data.TreeSelectionDataSource's selection detection fixed
+- org.jbnd.swing.BoundTreeModel now properly updates nodes when the
+DataObject relationships structure it reflects changes
+- org.jbnd.eof.EOFDataObject#validate(Object value, String key) method
+now performs value conversion using JBND's ValueConverter, before
+attempting to validate the value
+- org.jbnd.data.SortingDataSource had multiple bugs related to data
+changing in the target data source fixed
+- org.jbnd.binding.EditGroup#dataRemoved(DataSourceEvent) method fixed
+- org.jbnd.binding.ConstantValueBinding has been fixed to set constant
+values only if it's encapsulated binding allows it
+- org.jbnd.swing.conn.SpinnerConnection fixed to handle empty Bindings
+and adding / removing of DataObject's to it's Binding properly
+- AddGroup and EditGroup (as well as AddEditGroup) specific caching
+DataObject implementations now respond properly when asked for the value
+of org.jbnd.DataObject#THIS_KEY
+- org.jbnd.swing.conn.GenericPropertyConnection now overrides the
+#syncEditability() and #syncEnabledness() methods to do nothing
+
+API changes:
+- org.jbnd.eof.EOFDataObject implements DataObject.Deletable interface,
+and subsequently it's validateForDelete() method throws an
+org.jbnd.ValidationException, and not an NSValidation.ValidationException
+- org.jbnd.binding.AddGroup#validateForCommit() and
+org.jbnd.binding.EditGroup#validateForCommit() methods now return a
+Map<Integer, ValidationException[]>, instead of Map<Integer, String[]>,
+to provide better validation feedback
+- org.jbnd.binding.Binding#isEditable(String key) method is changed to 
+#isEditable(int index, String key), to provide per DataObject, per key
+editability control, this should not influence existing JBND based code
+- org.jbnd.binding.AddGroup has been depreciated in favor of the AddEditGroup*
+- org.jbnd.binding.EditGroup has been depreciated in favor of the AddEditGroup*
+- org.jbnd.binding.AddBinding has been depreciated in favor of the GPBinding*
+- org.jbnd.binding.EditBinding has been depreciated in favor of the GPBinding*
+- org.jbnd.binding.ViewBinding has been depreciated in favor of the GPBinding*
+* this will influence existing code, but refactoring should be extremely easy,
+since the API of the new classes is highly compatible with the API of the
+depreciated ones
+- org.jbnd.event.DataObjectEvent#oldValue() has been removed, use #relevantValue()
+instead. The new method has a slightly different purpose, read the API for more info.
+The EOGeneration templates have been changed accordingly, be sure to run the generation
+with the new templates!
+- org.jbnd.eof.EOFDataObject#THIS_KEY constant moved to org.jbnd.DataObject#THIS_KEY
+- org.jbnd.event.DataObjectEvent type flags moved from DataObject to DataObjectEvent
+
+0.7 -
+
+New features:
+- org.jbnd.eof.EOFUtil#toList(NSArray) method added
+to facilitate translating NSArrays of EOs into
+List<DataObject> objects
+- org.jbnd.support.JBNDUtil#reduce(List<?>, List<?>) added
+to facilitate finding the difference between an augmented
+list and it's original, useful to find out the exact changes
+when records are added or removed to and from a to-many
+relationship
+- org.jbnd.DataObject#isPersistent() method added to
+test DataObjects for being saved in the persistent store
+- org.jbnd.AbstractDataObject class added, provides facilities
+for managing event listeners and event firing
+- org.jbnd.binding.AddGroup allows an array of keys to be set
+on it, which will cause the AddGroup not to validate those
+properties when it's validateForCommit() method is called
+- org.jbnd.binding.ConstantValueBinding class added, see API
+documentation for more info about it's purpose
+- org.jbnd.swing.comp.BoundImagePanel class added, to facilitate
+managing images in DataObjects, see API documentation for more
+info
+- org.jbnd.swing.comp.BoundTextArea class added, used to display
+all the DataObjects a Binding provides in textual form, see API
+documentation for more details
+- org.jbnd.binding.AddBinding changed to be usable with key paths
+- org.jbnd.swing.conn.GenericPropertyConnection class added, allows
+binding arbitrary Swing component properties to Bindings, for example
+the text of a JButton
+- org.jbnd.swing.data.ListTableSelectionDataSource can now be used also
+with JLists that are not backed by Bound list models, as long as they
+contain DataObjects
+- org.jbnd.data.ProxyingDataSource interface added;
+FilteringDataSource, SortingDataSource and NullAddingDataSource
+now all implement ProxyingDataSource interface
+- org.jbnd.data.RelationshipDataSource class added, see API documentation
+for details on it's purpose
+- org.jbnd.DataObject implements Comparable<DataObject>, AbstractDataObject
+provides the default implementation
+
+Bug fixes:
+- org.jbnd.qual.AbstractFilter#filteredArray(T[] array) fixed
+- org.jbnd.binding.AddBinding and EditBinding now perform automated
+value conversion before validation
+- all the classes in the org.jbnd.swing.conn package fixed to properly
+handle data synchronization between the components and the bindings
+- org.jbnd.swing.conn.TextFieldConnection#setComponentEditable(boolean)
+fixed
+- org.jbnd.support.KeyPathChangeManager fixed not to throw a
+NullPointerException on initialization
+- org.jbnd.binding.EditGroup#cancel() method fixed
+- org.jbnd.binding.AddGroup#cancel() method fixed
+- org.jbnd.eof.EOFDataType#validate(Object value, String key) method
+now performs value conversion (using the org.jbnd.support.ValueConverter)
+before trying to validate the value
+- org.jbnd.data.FilteringDataSource#dataChanged(DataSourceEvent event)
+method fixed to properly propagate the event to registered listeners
+- org.jbnd.swing.BoundTableModel#setBinding(Binding binding) method
+fixed to fire a TableModel event of the appropriate kind
+- org.jbnd.data.SortingDataSource.DataObjectComparator#compare(...)
+method fixed not to throw inappropriate NullPointerExceptions
+
+API changes:
+- org.jbnd.eof.EOFValidationException convenience class removed
+
+0.6 - 
+
+New features:
+- org.jbnd.qual package added, provides dynamic, mutable qualifiers
+for JBND. Qualifiers can be used as org.jbnd.qual.Filter implementations
+to filter DataSources, to produce persistence system specific
+Qualifiers, etc...
+- org.jbnd.binding.QualifierBinding and org.jbnd.binding.QualifierGroup
+classes are provided to facilitate the binding of user interface values
+to JBND Qualifiers (specifically the KeyValueQualifiers)
+- org.jbnd.eof.EOFQualifierTranslator provided to translate JBND
+qualifiers into com.webobjects.eocontrol.EOQualifiers
+- org.jbnd.data.SortingDataSource class provided for easy sorting of
+data objects, along with enclosed classes specialized in different kinds
+of sorting
+- keypath support built in so that persistence systems that do not
+by themselves support keypath value getting and editing can easily
+implement it. Next to that, even without implementing the support
+they can use keypaths when defining JBND bindings
+
+Bugs fixed:
+- org.jbnd.support.JBNDUtil#set(value, key, object) method extended to
+support keypaths even if the persistence system does not
+- org.jbnd.swing.BoundTableModel keypath class detection support improved
+- org.jbnd.eof.EOFDataObject#validate(Object value, String key) fixed
+to handle keypath validation properly
+- org.jbnd.support.JBNDUtil#cleanPath(path) method fixed
+
+API changes:
+- org.jbnd.qual.Filter interface and all implementations are parameterized
+- org.jbnd.binding.Binding#getDataSource() method removed from the interface
+and all implementing classes, because it was superfluous to the API
+- org.jbnd.data.FilteringProxyDataSource class renamed to FilteringDataSource
+- org.jbnd.eof.EOFDataObject#validateValueForKeyPath(Object, String) method
+removed, but the same functionality (keypath validation) can be achieved with
+the validate(Object, String) method in the same class
+
+0.5 - Jan 15, 2008.
+
+First public release.

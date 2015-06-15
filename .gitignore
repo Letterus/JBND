@@ -1,0 +1,17 @@
+#	ignore python caches
+*.pyc
+__pycache__
+
+#	ignore OSX stuff
+.DS_Store
+
+#	ignore the binaries folder
+bin/
+
+#	ignore drafts
+drafts/
+
+#	ignore Eclipse project stuff
+.classpath
+.project
+.amateras
